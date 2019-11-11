@@ -1,0 +1,54 @@
+<?xml version="1.0"?>
+<opencv_storage>
+<P2_velodyne_2_left_camera_2_image_plane type_id="opencv-matrix">
+  <rows>3</rows>
+  <cols>4</cols>
+  <dt>d</dt>
+  <data>
+    7.215377e+02 0.000000e+00 6.095593e+02 4.485728e+01 0.000000e+00 7.215377e+02 1.728540e+02 2.163791e-01 0.000000e+00 0.000000e+00 1.000000e+00 2.745884e-03</data></P2_velodyne_2_left_camera_2_image_plane>
+<R_velodyne_2_left_camera type_id="opencv-matrix">
+  <rows>3</rows>
+  <cols>3</cols>
+  <dt>d</dt>
+  <data>
+    -3.6812299999999999e-02 -9.9925399999999998e-01
+    1.1642899999999999e-02 -3.6409499999999997e-02
+    -1.0302000000000000e-02 -9.9928399999999995e-01
+    9.9865899999999996e-01 -3.7209800000000001e-02
+    -3.6003100000000003e-02</data></R_velodyne_2_left_camera>
+<T_velodyne_2_left_camera type_id="opencv-matrix">
+  <rows>3</rows>
+  <cols>1</cols>
+  <dt>d</dt>
+  <data>
+    1.6162299999999999e-01 1.5268399999999999e-04 1.3153899999999999e-01</data></T_velodyne_2_left_camera>
+<left_K type_id="opencv-matrix">
+  <rows>3</rows>
+  <cols>3</cols>
+  <dt>d</dt>
+  <data>
+    3.9110938292995661e+02 0. 6.2664411677622468e+02 0.
+    3.8901361350720993e+02 4.7034815517264411e+02 0. 0. 1.</data></left_K>
+<left_D type_id="opencv-matrix">
+  <rows>5</rows>
+  <cols>1</cols>
+  <dt>d</dt>
+  <data>
+    5.9527288478011003e-02 3.5321640925615003e-02 1.7329239744997001e-02
+    6.5972843773609709e-04 -3.2910243251578000e-02</data></left_D>
+<right_K type_id="opencv-matrix">
+  <rows>3</rows>
+  <cols>3</cols>
+  <dt>d</dt>
+  <data>
+    3.4739296811334373e+02 0. 6.4181895001900159e+02 0.
+    3.4920828150785962e+02 4.5124587702675638e+02 0. 0. 1.</data></right_K>
+<right_D type_id="opencv-matrix">
+  <rows>5</rows>
+  <cols>1</cols>
+  <dt>d</dt>
+  <data>
+    1.2934870073444000e-02 -3.0879609702809999e-03
+    -2.1427392602730000e-03 -2.7638758973430001e-03
+    -7.5191418377385313e-04</data></right_D>
+</opencv_storage>

@@ -1,0 +1,54 @@
+<?xml version="1.0"?>
+<launch>
+ <arg name="rviz" default="false" />
+<arg    name="directory"
+            default="$(find kitti_player)/dataset/RAOD/"
+            />
+
+<node   name="kitti_road_detection_by_lidar_crf" pkg="road_detection" type="kitti_road_detection_by_lidar_crf"
+            required="true"
+            args= "-d $(arg directory) -t 0 " 
+            output="screen">
+            
+    <param name="thresh_theta" value="65.0"/><!--65  75.0-->
+  
+ 	<param name="ransac_DistanceThreshold" value="0.10"/><!--地面拟合允许距离误差,感觉这个阈值可以再加加-->
+
+
+<!--RANSAC 地面拟合选取的区域  这个用来确定用来扩展的点云-->
+    <param name="ransac_DistanceThreshold1" value="0.04"/> 
+    <param name="box_x_min1" value="2.45"/>
+    <param name="box_x_max1" value="20.0"/>
+    <param name="box_y_min1" value="-1.5"/>
+    <param name="box_y_max1" value="1.5"/>
+    <param name="box_z_min1" value="-2.7"/>
+    <param name="box_z_max1" value="0.4"/>
+
+
+
+<!--RANSAC 地面拟合选取的区域 这个用来确定路面的参数-->
+    <param name="box_x_min" value="2.45"/>
+    <param name="box_x_max" value="46.0"/>
+    <param name="box_y_min" value="-1.5"/>
+    <param name="box_y_max" value="2.0"/>
+    <param name="box_z_min" value="-2.7"/>
+    <param name="box_z_max" value="0.4"/>
+    
+	
+	<param name="terminate_expand_num" value="40"/><!--扩展终止点数，int-->
+	<param name="min_edge_distance" value="0.05"/><!--障碍物属性判断，边的距离需要大于这个值，防止噪声干扰 这个值设成0.015评估结果和没有是一样的-->
+	<param name="erode_size" value="35"/><!--道路检测图像后处理-->
+    <param name="process_for_view" value="true"/><!--使用crf需要这个设置为true-->
+
+</node>
+
+ <group if="$(arg rviz)">
+    <node launch-prefix="nice" pkg="rviz" type="rviz" name="rviz" />
+  </group>
+</launch>
+
+<!--
+help           h    help message
+directory      d    *required* - path to the kitti road dataset Directory
+train_test     t    on train data or test data 1 表示在训练数据上执行，否则在测试数据上执行
+-->

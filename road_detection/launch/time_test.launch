@@ -1,0 +1,196 @@
+<?xml version="1.0"?>
+<launch>
+ <arg name="rviz" default="true" />
+<arg    name="directory"
+            default="$(find kitti_player)/dataset/RAOD/"
+            />
+
+<node   name="kdtree_delaunay_ransac_time_test" pkg="road_detection" type="kdtree_delaunay_ransac_time_test"
+            required="true"
+            args= "-d $(arg directory) -t 1 " 
+            output="screen">
+            
+    <param name="thresh_theta" value="45.0"/><!--65  75.0-->
+    <param name="obstacle_thresh_z" value="-1.20"/><!--激光雷达的高度：1.73m,看数据激光雷达并不是平的,这个先不用，后面有地面拟合，这个就不是很重要了-->
+ 	<param name="roughness_distance_thresh" value="0.1"/><!--这个还没用，感觉不会有很大效果，判断三角剖分连接的点的距离在这个范围内就用来统计之间的高度差，来判断是不是类似草地-->
+    <param name="roughness_z_thresh" value="0.04"/><!--这个就是上面用来判断的阈值 没用-->
+ 	<param name="ransac_DistanceThreshold" value="0.10"/><!--地面拟合允许距离误差,感觉这个阈值可以再加加-->
+
+
+<!--RANSAC 地面拟合选取的区域  这个用来确定用来扩展的点云-->
+    <param name="ransac_DistanceThreshold1" value="0.04"/> 
+    <param name="box_x_min1" value="2.45"/>
+    <param name="box_x_max1" value="20.0"/>
+    <param name="box_y_min1" value="-1.5"/>
+    <param name="box_y_max1" value="1.5"/>
+    <param name="box_z_min1" value="-2.7"/>
+    <param name="box_z_max1" value="0.4"/>
+
+
+
+<!--RANSAC 地面拟合选取的区域 这个用来确定路面的参数-->
+    <param name="box_x_min" value="2.45"/>
+    <param name="box_x_max" value="46.0"/>
+    <param name="box_y_min" value="-1.5"/>
+    <param name="box_y_max" value="2.0"/>
+    <param name="box_z_min" value="-2.7"/>
+    <param name="box_z_max" value="0.4"/>
+    <param name="near_distanse_thresh" value="2.0"/><!--1米效果变差，20米感觉和不设置应该没差别 这个暂时不用-->
+	<param name="ransac_DistanceThreshold_m" value="5.0"/>
+	<param name="terminate_expand_num" value="40"/><!--扩展终止点数，int-->
+	<param name="threshold_low" value="35.0"/><!--用于检测草地的颜色阈值，这个对应h通道  这个先不用道路中很多像素的值也在这个区间 -->
+	<param name="threshold_up" value="77.0"/>
+	<param name="threshold_sv" value="43.0"/>
+
+	<param name="min_edge_distance" value="0.05"/><!--障碍物属性判断，边的距离需要大于这个值，防止噪声干扰 这个值设成0.015评估结果和没有是一样的-->
+	<param name="erode_size" value="35"/><!--道路检测图像后处理-->
+<!---下面这组参数三组数据结果均衡一点，下面的高的高一点，差的又差一点，
+    <param name="box_x_min" value="2.45"/>
+    <param name="box_x_max" value="46.0"/>
+    <param name="box_y_min" value="-2.0"/>
+    <param name="box_y_max" value="2.0"/>
+    <param name="box_z_min" value="-2.7"/>
+    <param name="box_z_max" value="0.4"/>
+
+
+Searching for submitted files with prefix: um_road_
+Computing evaluation scores...
+MaxF: 82.21 
+      89.87  （参考文献2017ICRA的结果）
+AvgPrec: 70.41 
+PRE_wp: 79.05 
+REC_wp: 85.63 
+FPR_wp: 10.43 
+FNR_wp: 14.37 
+Finished evaluating category: um_road 
+Execute evaluation for category umm_road ...
+Searching for submitted files with prefix: umm_road_
+Computing evaluation scores...
+MaxF: 84.94 
+  93.32
+AvgPrec: 82.02 
+PRE_wp: 88.65 
+REC_wp: 81.54 
+FPR_wp: 11.39 
+FNR_wp: 18.46 
+Finished evaluating category: umm_road 
+Execute evaluation for category uu_road ...
+Searching for submitted files with prefix: uu_road_
+Computing evaluation scores...
+MaxF: 76.22 
+  86.55
+AvgPrec: 62.78 
+PRE_wp: 76.48 
+REC_wp: 75.97 
+FPR_wp: 8.31 
+FNR_wp: 24.03 
+Finished evaluating category: uu_road 
+
+
+
+   <param name="box_x_min" value="2.45"/>
+    <param name="box_x_max" value="46.0"/>
+    <param name="box_y_min" value="-1.0"/>
+    <param name="box_y_max" value="1.0"/>
+    <param name="box_z_min" value="-2.7"/>
+    <param name="box_z_max" value="0.4"/>
+
+Searching for submitted files with prefix: um_road_
+Computing evaluation scores...
+MaxF: 83.71 
+这个增加1.5
+AvgPrec: 72.14 
+PRE_wp: 81.18 
+REC_wp: 86.41 
+FPR_wp: 9.21 
+FNR_wp: 13.59 
+Finished evaluating category: um_road 
+Execute evaluation for category umm_road ...
+Searching for submitted files with prefix: umm_road_
+Computing evaluation scores...
+MaxF: 85.12 
+ 这个增加0.2
+AvgPrec: 82.87 
+PRE_wp: 89.69 
+REC_wp: 81.00 
+FPR_wp: 10.15 
+FNR_wp: 19.00 
+Finished evaluating category: umm_road 
+Execute evaluation for category uu_road ...
+Searching for submitted files with prefix: uu_road_
+Computing evaluation scores...
+MaxF: 74.71 
+  这个减了1.5
+AvgPrec: 65.38 
+PRE_wp: 80.06 
+REC_wp: 70.04 
+FPR_wp: 6.21 
+FNR_wp: 29.96 
+Finished evaluating category: uu_road 
+
+
+
+
+
+
+
+ 
+    <param name="box_x_min" value="2.45"/>
+    <param name="box_x_max" value="46.0"/>
+    <param name="box_y_min" value="-1.5"/>
+    <param name="box_y_max" value="1.5"/>
+    <param name="box_z_min" value="-2.7"/>
+    <param name="box_z_max" value="0.4"/>
+
+Searching for submitted files with prefix: um_road_
+Computing evaluation scores...
+MaxF: 83.85 
+AvgPrec: 72.14 
+PRE_wp: 81.17 
+REC_wp: 86.72 
+FPR_wp: 9.25 
+FNR_wp: 13.28 
+Finished evaluating category: um_road 
+Execute evaluation for category umm_road ...
+Searching for submitted files with prefix: umm_road_
+Computing evaluation scores...
+MaxF: 85.07 
+AvgPrec: 82.66 
+PRE_wp: 89.43 
+REC_wp: 81.11 
+FPR_wp: 10.46 
+FNR_wp: 18.89 
+Finished evaluating category: umm_road 
+Execute evaluation for category uu_road ...
+Searching for submitted files with prefix: uu_road_
+Computing evaluation scores...
+MaxF: 75.71 
+AvgPrec: 64.59 
+PRE_wp: 78.97 
+REC_wp: 72.71 
+FPR_wp: 6.89 
+FNR_wp: 27.29 
+Finished evaluating category: uu_road 
+Successfully finished evaluation for 3 categories: ['um_road', 'umm_road', 'uu_road'] 
+
+
+
+
+
+
+-->
+
+
+
+</node>
+
+ <group if="$(arg rviz)">
+    <node launch-prefix="nice" pkg="rviz" type="rviz" name="rviz" />
+  </group>
+</launch>
+
+<!--
+help           h    help message
+directory      d    *required* - path to the kitti road dataset Directory
+train_test     t    on train data or test data 1 表示在训练数据上执行，否则在测试数据上执行
+-->

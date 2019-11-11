@@ -1,0 +1,50 @@
+<?xml version="1.0"?>
+<launch>
+
+<!--下面是2011_09_26这一天激光点云投到矫正后的摄像头参考系的外参，来自odometry里面的参数，旋转矩阵转到了四元数，如果使用原始数据，就参考日期，如果使用odometry里面的数据就用参考：
+里程计数据和原始数据的对应关系：
+Nr.     Sequence name     Start   End
+
+00: 2011_10_03_drive_0027 000000 004540  Residential 20 done
+01: 2011_10_03_drive_0042 000000 001100  road 11        done   
+02: 2011_10_03_drive_0034 000000 004660  Residential 21 done
+03: 2011_09_26_drive_0067 000000 000800					数据没找到
+04: 2011_09_30_drive_0016 000000 000270  road 10        done
+05: 2011_09_30_drive_0018 000000 002760  Residential 14 done
+06: 2011_09_30_drive_0020 000000 001100  Residential 15 done
+07: 2011_09_30_drive_0027 000000 001100  Residential 16 只有同步以后的数据
+08: 2011_09_30_drive_0028 001100 005170  Residential 17 done
+09: 2011_09_30_drive_0033 000000 001590  Residential 18 done
+10: 2011_09_30_drive_0034 000000 001200  Residential 19 done
+其他序列需要转一下或者对应找到日期（比较Tr参数）
+2011_09_26:
+-0.002797  -0.075109  -0.272133  0.494777  -0.499970  0.499913  0.505285 
+
+2011_09_30:
+-0.004784  -0.073374  -0.333997  -0.499146  0.504085  -0.496817  -0.499924 
+
+2011_10_03:
+-0.011985  -0.054040  -0.292197  0.499888  -0.503701  0.496055  0.500325 
+-->
+<node pkg="tf2_ros" type="static_transform_publisher" name="link4_broadcaster" args="-0.002797  -0.075109  -0.272133  0.494777  -0.499970  0.499913  0.505285 camera_0 velodyne" />
+
+
+
+<!--加上这个是因为kittiplayer发布的的点云的参考系是base_link-->
+<node pkg="tf2_ros" type="static_transform_publisher" name="link3_broadcaster" args="0  0  0 0 0 0 velodyne base_link" />
+
+<node pkg="road_detection" type="transform_kitti_points2_2_left_camera_for_obstacle_and_ground_detection" name="transform_kitti_points2_2_left_camera_for_obstacle_and_ground_detection" output="screen" respawn="true"><!--这个和下面不同，数据类型是sensor_msgs::PointCloud2，带强度信息-->
+    <remap from="input_points" to="/kitti_player_100/hdl64e"/><!--订阅的点云,transformed_frame_points在head_ground坐标系下-->
+    <remap from="/kitti_player_100/color/left/image_rect" to="/kitti_player_100/color/left/image_rect"/>
+    <!--remap from="transformed_frame_points" to="transformed_frame_points"/--><!--发布的点云的点云,这里先不发布信息，以后有需要再说，直接在这个节点里面执行算法就行-->  
+	<param name="sensor_param_filename" value="$(find road_detection)/launch/param/velodyne_left_camera_parameters.xml" /><!--将对应摄像头的投影矩阵考到P2_velodyne_2_left_camera_2_image_plane里面-->
+    <param name="target_frame_link" value="camera_0"/><!--转化到的目标参考系，最好转到head_ground参考系，考虑运动时的姿态变化和高度变化，需要udp_dog2odometer节点和对应的定位融合节点！！！！！！！另外可能还要结合车道信息将点云转到车道范围，方便下面检测需要范围的障碍信息，然后将障碍信息转到想要的参考系，其他动作有车道线进行约束，也可以行为约束，障碍物信息还是现在这样！-->
+    <param name="source_frame_link" value="velodyne"/><!--点云原始参考系，一般应该是和点云自身的frame_id是一样-->
+    <param name="thresh_theta" value="70.0"/><!--75.0-->
+    <param name="obstacle_thresh_z" value="-1.20"/><!--激光雷达的高度：1.73m,看数据激光雷达并不是平的-->
+	<param name="p_points_downsample_size_" value="0.05"/><!--在处理之前先对点云进行过滤，太密不太好,现在没用了-->
+
+    
+</node>
+
+</launch>
